@@ -1,2 +1,2 @@
-# Kruskal-s-and-Prim-s-algorithm
+# Compare algorithms
 Discrete lab to compare efficiency of algorithms
