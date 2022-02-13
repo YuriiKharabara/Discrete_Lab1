@@ -137,7 +137,7 @@ def test_algoritms() -> dict:
 
         # Test Kraskal
         time_taken = 0
-        for _ in range(1):
+        for _ in range(1000):
             start = time.perf_counter()
             kruskal_algorithm(graph_info)
             end = time.perf_counter()
