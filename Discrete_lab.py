@@ -46,13 +46,25 @@ def get_info():  # Крч я тут заклєпав прст окрему фу�
     return (edges, nodes)
 
 
-def kruskal_algorithm(graph_info):
+def kruskal_algorithm(graph_info: tuple) -> list:
+    """Return minimum spanning tree using kruskal algorithm.
+
+    Args:
+        graph_info (tuple): Tuple of list of edges and nodes.
+
+    Returns:
+        list: Edges of a minimum spanning tree.
+
+    >>> kruskal_algorithm(([(1, 2, 13), (1, 3, 18), (1, 4, 17), (1, 5, 14), (1\
+, 6, 22), (2, 3, 26), (2, 5, 22), (3, 4, 3), (4, 6, 19)], [1, 2, 3, 4, 5, 6]))
+    [(3, 4, 3), (1, 2, 13), (1, 5, 14), (4, 6, 19), (1, 4, 17)]
+    """
     # Створюю сортований список ребер за зростянням ваг,
     # сет неізольованих вершин і словник де ключами є кожна вершина,
     # а значеннями лісти вершин, з якими ця вершина зєднана
     E = sorted(graph_info[0], key=lambda x: x[2])
     connected_nodes = set()
-    isolated_groups = dict()
+    isolated_groups = {n: n for n in graph_info[1]}
     T = list()
 
     # тут не складно, я хуй зна як описати, кожен рядок це тупо,
@@ -72,13 +84,14 @@ def kruskal_algorithm(graph_info):
                     isolated_groups[v1] = isolated_groups[v2]
             connected_nodes.update({v1, v2})
             T.append(edge)
-        else:
-            if v2 not in isolated_groups[v1]:
-                tmp = isolated_groups[v1]
-                isolated_groups[v1] += isolated_groups[v2]
-                isolated_groups[v2] += tmp
-                T.append(edge)
 
+    for edge in E:
+        if edge not in T:
+            v1, v2 = edge[0], edge[1]
+            if v2 not in isolated_groups[v1]:
+                T.append(edge)
+                isolated_groups[v1] += isolated_groups[v2]
+                isolated_groups[v2] = isolated_groups[v1]
     return T
 
 
@@ -106,9 +119,11 @@ def prim_algorithm(graph_info):
 
 def main():
     graph_info = get_info()
-    Tp = prim_algorithm(graph_info)
+    # Tp = prim_algorithm(graph_info)
     Tk = kruskal_algorithm(graph_info)
 
 
 if __name__ == "__main__":
     main()
+    import doctest
+    print(doctest.testmod())
