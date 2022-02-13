@@ -1,6 +1,7 @@
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
+import time
 
 from itertools import combinations, groupby
 
@@ -37,13 +38,21 @@ def gnp_random_connected_graph(num_of_nodes: int,
     return G
 
 
-def get_info():  # Крч я тут заклєпав прст окрему функцію яка бере той граф
-    # шо генерується і повертає список сам абчиш чого
-    G = gnp_random_connected_graph(10, 1, False)
-    edges = list(map(lambda x: (x[0], x[1], x[2]['weight']), G.edges.data()))
+def get_info(num_of_nodes: int, completeness: float = 1) -> tuple:
+    """Return a tuple of list graph's edges and list of nodes.
 
+    Args:
+        num_of_nodes (int): Number of nodes in the graph.
+        completeness (float): Completeness of the graph.
+
+    Returns:
+        tuple: List of edges and list of nodes.
+    """
+    G = gnp_random_connected_graph(num_of_nodes, completeness)
+    edges = list(map(lambda x: (x[0], x[1], x[2]['weight']), G.edges.data()))
     nodes = list(G.nodes)
-    return (edges, nodes)
+
+    return edges, nodes
 
 
 def kruskal_algorithm(graph_info: tuple) -> list:
@@ -95,7 +104,52 @@ def kruskal_algorithm(graph_info: tuple) -> list:
     return T
 
 
-# Тут Всьо хуйня шас, я прст розбирався з деталаями алгоритму, не зважай на код
+def test_algoritms() -> dict:
+    """Run both algorithms 1000 times for each humber of nodes,
+    return statistics of performance.
+
+    Returns:
+        dict: Statistics of performance. Keys are algorithms,
+            values are lists of tuples of num_of_nodes and avg time.
+    """
+    NODES = [5, 10, 15, 20, 30, 50, 75, 100,
+             150, 200, 350, 500, 650, 800, 1000]
+
+    stat = {
+        'Prim': [],
+        'Kraskal': []
+    }
+
+    for num_of_nodes in NODES:
+        graph_info = get_info(num_of_nodes)
+
+        # Test Prim
+        time_taken = 0
+        for _ in range(1000):
+            start = time.perf_counter()
+            prim_algorithm(graph_info)
+            end = time.perf_counter()
+
+            time_taken += end - start
+
+        avg_time = time_taken/1000
+        stat['Prim'].append((num_of_nodes, avg_time))
+
+        # Test Kraskal
+        time_taken = 0
+        for _ in range(1):
+            start = time.perf_counter()
+            kruskal_algorithm(graph_info)
+            end = time.perf_counter()
+
+            time_taken += end - start
+
+        avg_time = time_taken/1000
+        stat['Kraskal'].append((num_of_nodes, round(avg_time, 10)))
+
+    return stat
+
+
 def prim_algorithm(graph_info):
     print(graph_info)
     used_nodes = set()
@@ -118,12 +172,11 @@ def prim_algorithm(graph_info):
 
 
 def main():
-    graph_info = get_info()
+    # graph_info = get_info(10, 1)
     # Tp = prim_algorithm(graph_info)
-    Tk = kruskal_algorithm(graph_info)
+    # Tk = kruskal_algorithm(graph_info)
+    test_algoritms()
 
 
 if __name__ == "__main__":
     main()
-    import doctest
-    print(doctest.testmod())
