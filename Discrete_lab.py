@@ -106,7 +106,7 @@ def kruskal_algorithm(graph_info: tuple) -> list:
     return T
 
 
-def test_algoritms() -> dict:
+def test_algoritms(num_of_iterations: int = 100) -> dict:
     """Run both algorithms 1000 times for each humber of nodes,
     return statistics of performance.
 
@@ -115,7 +115,7 @@ def test_algoritms() -> dict:
             values are lists of tuples of num_of_nodes and avg time.
     """
     NODES = [5, 10, 15, 20, 30, 50, 75, 100,
-             350, 500]
+             350, 500, 1000]
     stat = {
         'Prim': [],
         'Kraskal': []
@@ -125,7 +125,7 @@ def test_algoritms() -> dict:
 
         # Test Prim
         time_taken = 0
-        for _ in range(1000):
+        for _ in tqdm(range(num_of_iterations)):
             graph_info = get_info(num_of_nodes)
             start = time.perf_counter()
             prim_algorithm(graph_info)
@@ -133,12 +133,17 @@ def test_algoritms() -> dict:
 
             time_taken += end - start
 
-        avg_time = time_taken/1000
-        stat['Prim'].append((num_of_nodes, avg_time))
+        avg_time = time_taken/num_of_iterations
+        stat['Prim'].append(
+            {
+                'num_of_nodes': num_of_nodes,
+                'avg_time': avg_time
+                }
+            )
 
         # Test Kraskal
         time_taken = 0
-        for _ in tqdm(range(100)):
+        for _ in tqdm(range(num_of_iterations)):
             graph_info = get_info(num_of_nodes, completeness=0.3)
             start = time.perf_counter()
             kruskal_algorithm(graph_info)
@@ -146,11 +151,17 @@ def test_algoritms() -> dict:
 
             time_taken += end - start
 
-        avg_time = time_taken/1000
-        stat['Kraskal'].append((num_of_nodes, avg_time))
+        avg_time = time_taken/num_of_iterations
+        stat['Kraskal'].append(
+            {
+                'num_of_nodes': num_of_nodes,
+                'avg_time': avg_time
+                }
+            )
 
     with open('stat.json', 'w', encoding='utf-8') as file:
         json.dump(stat, file, ensure_ascii=False, indent=4)
+
     print(stat)
     return stat
 
@@ -176,12 +187,5 @@ def prim_algorithm(graph_info):
     unused_nodes = unused_nodes-used_nodes
 
 
-def main():
-    # graph_info = get_info(10, 1)
-    # Tp = prim_algorithm(graph_info)
-    # Tk = kruskal_algorithm(graph_info)
-    test_algoritms()
-
-
 if __name__ == "__main__":
-    main()
+    test_algoritms()
