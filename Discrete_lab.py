@@ -126,7 +126,7 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
         # Test Prim
         time_taken = 0
         for _ in tqdm(range(num_of_iterations)):
-            graph_info = get_info(num_of_nodes)
+            graph_info = get_info(num_of_nodes, completeness=0.3)
             start = time.perf_counter()
             prim_algorithm(graph_info)
             end = time.perf_counter()
