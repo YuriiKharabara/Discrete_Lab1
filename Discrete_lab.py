@@ -2,6 +2,8 @@ import random
 import networkx as nx
 import matplotlib.pyplot as plt
 import time
+from tqdm import tqdm
+import json
 
 from itertools import combinations, groupby
 
@@ -113,19 +115,18 @@ def test_algoritms() -> dict:
             values are lists of tuples of num_of_nodes and avg time.
     """
     NODES = [5, 10, 15, 20, 30, 50, 75, 100,
-             150, 200, 350, 500, 650, 800, 1000]
-
+             350, 500]
     stat = {
         'Prim': [],
         'Kraskal': []
     }
 
     for num_of_nodes in NODES:
-        graph_info = get_info(num_of_nodes)
 
         # Test Prim
         time_taken = 0
         for _ in range(1000):
+            graph_info = get_info(num_of_nodes)
             start = time.perf_counter()
             prim_algorithm(graph_info)
             end = time.perf_counter()
@@ -137,7 +138,8 @@ def test_algoritms() -> dict:
 
         # Test Kraskal
         time_taken = 0
-        for _ in range(1000):
+        for _ in tqdm(range(100)):
+            graph_info = get_info(num_of_nodes, completeness=0.3)
             start = time.perf_counter()
             kruskal_algorithm(graph_info)
             end = time.perf_counter()
@@ -145,8 +147,11 @@ def test_algoritms() -> dict:
             time_taken += end - start
 
         avg_time = time_taken/1000
-        stat['Kraskal'].append((num_of_nodes, round(avg_time, 10)))
+        stat['Kraskal'].append((num_of_nodes, avg_time))
 
+    with open('stat.json', 'w', encoding='utf-8') as file:
+        json.dump(stat, file, ensure_ascii=False, indent=4)
+    print(stat)
     return stat
 
 
