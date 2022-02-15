@@ -13,7 +13,7 @@ def gnp_random_connected_graph(num_of_nodes: int,
                                completeness: int,
                                draw: bool = False) -> list[tuple[int, int]]:
     """
-    Generates a random undirected graph, similarly to an Erdős-Rényi 
+    Generates a random undirected graph, similarly to an Erdős-Rényi
     graph, but enforcing that the resulting graph is conneted
     """
 
@@ -217,7 +217,7 @@ for i in tqdm(range(100)):
     if tk[1] != tp[1]:
         print('Graph: ', graph)
         print('Prim:', tp)
-        print('Kruskal: ', tk)
+        print('Kruskal:', tk)
         print()
 # if __name__ == "__main__":
 #     test_algoritms()
