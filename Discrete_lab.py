@@ -20,24 +20,24 @@ def gnp_random_connected_graph(num_of_nodes: int,
     edges = combinations(range(num_of_nodes), 2)
     G = nx.Graph()
     G.add_nodes_from(range(num_of_nodes))
-    
-    for _, node_edges in groupby(edges, key = lambda x: x[0]):
+
+    for _, node_edges in groupby(edges, key=lambda x: x[0]):
         node_edges = list(node_edges)
         random_edge = random.choice(node_edges)
         G.add_edge(*random_edge)
         for e in node_edges:
             if random.random() < completeness:
                 G.add_edge(*e)
-                
-    for (u,v,w) in G.edges(data=True):
-        w['weight'] = random.randint(0,10)
-                
-    if draw: 
-        plt.figure(figsize=(10,6))
-        nx.draw(G, node_color='lightblue', 
-            with_labels=True, 
-            node_size=500)
-    
+
+    for (u, v, w) in G.edges(data=True):
+        w['weight'] = random.randint(0, 10)
+
+    if draw:
+        plt.figure(figsize=(10, 6))
+        nx.draw(G, node_color='lightblue',
+                with_labels=True,
+                node_size=500)
+
     return G
 
 
@@ -57,7 +57,10 @@ def get_info(num_of_nodes: int, completeness: float = 1) -> tuple:
 
     return edges, nodes
 
+
 get_info(2)
+
+
 def kruskal_algorithm(graph_info: tuple) -> list:
     """Return minimum spanning tree using kruskal algorithm.
 
@@ -94,17 +97,25 @@ def kruskal_algorithm(graph_info: tuple) -> list:
                 else:
                     isolated_groups[v2].append(v1)
                     isolated_groups[v1] = isolated_groups[v2]
-            connected_nodes.update({v1, v2})
+            connected_nodes.add(v1)
+            connected_nodes.add(v2)
             T.append(edge)
 
     for edge in E:
-        if edge not in T:
-            v1, v2 = edge[0], edge[1]
-            if v2 not in isolated_groups[v1]:
-                T.append(edge)
-                isolated_groups[v1] += isolated_groups[v2]
-                isolated_groups[v2] = isolated_groups[v1]
-    return T
+        if len(T) == len(graph_info[1])-1:
+            break
+        v1, v2 = edge[0], edge[1]
+        if v2 not in isolated_groups[v1]:
+            T.append(edge)
+            tmp = isolated_groups[v1]
+            isolated_groups[v1] += isolated_groups[v2]
+            isolated_groups[v2] += tmp
+
+    weight = 0
+    for i in T:
+        weight += i[2]
+
+    return T, weight
 
 
 def test_algoritms(num_of_iterations: int = 100) -> dict:
@@ -139,8 +150,8 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
             {
                 'num_of_nodes': num_of_nodes,
                 'avg_time': avg_time
-                }
-            )
+            }
+        )
 
         # Test Kraskal
         time_taken = 0
@@ -157,8 +168,8 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
             {
                 'num_of_nodes': num_of_nodes,
                 'avg_time': avg_time
-                }
-            )
+            }
+        )
 
     with open('stat.json', 'w', encoding='utf-8') as file:
         json.dump(stat, file, ensure_ascii=False, indent=4)
@@ -168,24 +179,26 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
 
 
 def get_minimal_weigth(graph_edges, connected_nodes, tree):
-    used_points=set()
+    used_points = set()
     for verticles in connected_nodes:
-        edge = min (graph_edges, key=lambda x: x[2] if ((x[0]==verticles or x[1] == verticles) and (x[0] not in connected_nodes or x[1] not in connected_nodes)) else math.inf)
+        edge = min(graph_edges, key=lambda x: x[2] if ((x[0] == verticles or x[1] == verticles) and (
+            x[0] not in connected_nodes or x[1] not in connected_nodes)) else math.inf)
         used_points.add(edge)
     for i in tree:
         if i in used_points:
             used_points.remove(i)
-    edge=min(used_points, key=lambda x: x[2])
+    edge = min(used_points, key=lambda x: x[2])
     return edge
 
+
 def prim_algorithm(graph, weight=0):
-    length=len(graph[1])
-    connected_nodes=[0]
-    tree=[]
-    
-    while len(connected_nodes)!=length:
-        edge=get_minimal_weigth(graph[0], connected_nodes, tree)
-        if edge==math.inf:
+    length = len(graph[1])
+    connected_nodes = [0]
+    tree = []
+
+    while len(connected_nodes) != length:
+        edge = get_minimal_weigth(graph[0], connected_nodes, tree)
+        if edge == math.inf:
             break
         tree.append(edge)
         if edge[0] not in connected_nodes:
@@ -193,9 +206,18 @@ def prim_algorithm(graph, weight=0):
         if edge[1] not in connected_nodes:
             connected_nodes.append(edge[1])
     for i in tree:
-        weight+=i[2]
+        weight += i[2]
     return tree, weight
 
-print(prim_algorithm(get_info(9, 0.2)))
+
+for i in tqdm(range(100)):
+    graph = get_info(10, 0.2)
+    tp = prim_algorithm(graph)
+    tk = kruskal_algorithm(graph)
+    if tk[1] != tp[1]:
+        print('Graph: ', graph)
+        print('Prim:', tp)
+        print('Kruskal: ', tk)
+        print()
 # if __name__ == "__main__":
 #     test_algoritms()
