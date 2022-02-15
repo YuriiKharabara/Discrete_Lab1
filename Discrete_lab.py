@@ -1,4 +1,5 @@
 import random
+from unittest import IsolatedAsyncioTestCase
 import networkx as nx
 import matplotlib.pyplot as plt
 import time
@@ -79,7 +80,7 @@ def kruskal_algorithm(graph_info: tuple) -> list:
     # а значеннями лісти вершин, з якими ця вершина зєднана
     E = sorted(graph_info[0], key=lambda x: x[2])
     connected_nodes = set()
-    isolated_groups = {n: n for n in graph_info[1]}
+    isolated_groups = {}
     T = list()
 
     # тут не складно, я хуй зна як описати, кожен рядок це тупо,
@@ -102,14 +103,16 @@ def kruskal_algorithm(graph_info: tuple) -> list:
             T.append(edge)
 
     for edge in E:
-        if len(T) == len(graph_info[1])-1:
-            break
         v1, v2 = edge[0], edge[1]
         if v2 not in isolated_groups[v1]:
-            T.append(edge)
-            tmp = isolated_groups[v1]
             isolated_groups[v1] += isolated_groups[v2]
-            isolated_groups[v2] += tmp
+            gr2 = set(isolated_groups[v2])
+            for node in gr2:
+                isolated_groups[node] = isolated_groups[v1]
+            # for node in set(isolated_groups[v2]):
+            #     isolated_groups[v2] += isolated_groups[v1]
+
+            T.append(edge)
 
     weight = 0
     for i in T:
@@ -179,21 +182,21 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
 
 
 def get_minimal_weigth(graph_edges, connected_nodes, tree):
-    used_points=set()
+    used_points = set()
     for verticles in connected_nodes:
-        edge = min (graph_edges, key=lambda x: x[2] if ((x[0]==verticles or x[1] == verticles) and (x[0] not in connected_nodes or x[1] not in connected_nodes)) else math.inf)
+        edge = min(graph_edges, key=lambda x: x[2] if ((x[0] == verticles or x[1] == verticles) and (
+            x[0] not in connected_nodes or x[1] not in connected_nodes)) else math.inf)
         used_points.add(edge)
     for i in tree:
         if i in used_points:
             used_points.remove(i)
-    dont_needed=set()
+    dont_needed = set()
     for j in used_points:
-            if j[0] in connected_nodes and j[1] in connected_nodes:
-                dont_needed.add(j)
-    used_points=used_points-dont_needed
-    edge=min(used_points, key=lambda x: x[2])
+        if j[0] in connected_nodes and j[1] in connected_nodes:
+            dont_needed.add(j)
+    used_points = used_points-dont_needed
+    edge = min(used_points, key=lambda x: x[2])
     return edge
-
 
 
 def prim_algorithm(graph, weight=0):
@@ -212,12 +215,12 @@ def prim_algorithm(graph, weight=0):
             connected_nodes.append(edge[1])
     for i in tree:
         weight += i[2]
-    tree = sorted(tree, key = lambda x: x[2])
+    tree = sorted(tree, key=lambda x: x[2])
     return tree, weight
 
 
-for i in tqdm(range(100)):
-    graph = get_info(10, 0.2)
+for i in tqdm(range(1000)):
+    graph = get_info(10, 0.1)
     tp = prim_algorithm(graph)
     tk = kruskal_algorithm(graph)
     if tk[1] != tp[1]:
