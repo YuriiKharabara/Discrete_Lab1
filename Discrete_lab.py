@@ -2,6 +2,7 @@ import random
 import networkx as nx
 import matplotlib.pyplot as plt
 import time
+import math
 from tqdm import tqdm
 import json
 
@@ -12,31 +13,31 @@ def gnp_random_connected_graph(num_of_nodes: int,
                                completeness: int,
                                draw: bool = False) -> list[tuple[int, int]]:
     """
-    Generates a random undirected graph, similarly to an Erdős-Rényi
+    Generates a random undirected graph, similarly to an Erdős-Rényi 
     graph, but enforcing that the resulting graph is conneted
     """
 
     edges = combinations(range(num_of_nodes), 2)
     G = nx.Graph()
     G.add_nodes_from(range(num_of_nodes))
-
-    for _, node_edges in groupby(edges, key=lambda x: x[0]):
+    
+    for _, node_edges in groupby(edges, key = lambda x: x[0]):
         node_edges = list(node_edges)
         random_edge = random.choice(node_edges)
         G.add_edge(*random_edge)
         for e in node_edges:
             if random.random() < completeness:
                 G.add_edge(*e)
-
-    for (u, v, w) in G.edges(data=True):
-        w['weight'] = random.randint(0, 10)
-
-    if draw:
-        plt.figure(figsize=(10, 6))
-        nx.draw(G, node_color='lightblue',
-                with_labels=True,
-                node_size=500)
-
+                
+    for (u,v,w) in G.edges(data=True):
+        w['weight'] = random.randint(0,10)
+                
+    if draw: 
+        plt.figure(figsize=(10,6))
+        nx.draw(G, node_color='lightblue', 
+            with_labels=True, 
+            node_size=500)
+    
     return G
 
 
@@ -56,7 +57,7 @@ def get_info(num_of_nodes: int, completeness: float = 1) -> tuple:
 
     return edges, nodes
 
-
+get_info(2)
 def kruskal_algorithm(graph_info: tuple) -> list:
     """Return minimum spanning tree using kruskal algorithm.
 
@@ -166,26 +167,35 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
     return stat
 
 
-def prim_algorithm(graph_info):
-    print(graph_info)
-    used_nodes = set()
-    unused_nodes = set(graph_info[1])
+def get_minimal_weigth(graph_edges, connected_nodes, tree):
+    used_points=set()
+    for verticles in connected_nodes:
+        edge = min (graph_edges, key=lambda x: x[2] if ((x[0]==verticles or x[1] == verticles) and (x[0] not in connected_nodes or x[1] not in connected_nodes)) else math.inf)
+        used_points.add(edge)
+    for i in tree:
+        if i in used_points:
+            used_points.remove(i)
+    edge=min(used_points, key=lambda x: x[2])
+    return edge
 
-    s = graph_info[1][0]
-    used_nodes.add(s)
+def prim_algorithm(graph, weight=0):
+    length=len(graph[1])
+    connected_nodes=[0]
+    tree=[]
+    
+    while len(connected_nodes)!=length:
+        edge=get_minimal_weigth(graph[0], connected_nodes, tree)
+        if edge==math.inf:
+            break
+        tree.append(edge)
+        if edge[0] not in connected_nodes:
+            connected_nodes.append(edge[0])
+        if edge[1] not in connected_nodes:
+            connected_nodes.append(edge[1])
+    for i in tree:
+        weight+=i[2]
+    return tree, weight
 
-    tree = [[s], []]
-
-    incident = []
-    for i in graph_info[0]:
-        if i[0] == s:
-            incident.append(i)
-
-    edge_min = min(incident, key=lambda x: x[2])
-    tree[1].append(edge_min)
-    used_nodes.add(edge_min[1])
-    unused_nodes = unused_nodes-used_nodes
-
-
-if __name__ == "__main__":
-    test_algoritms()
+print(prim_algorithm(get_info(9, 0.2)))
+# if __name__ == "__main__":
+#     test_algoritms()
