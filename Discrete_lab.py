@@ -1,11 +1,11 @@
 import random
-from unittest import IsolatedAsyncioTestCase
 import networkx as nx
 import matplotlib.pyplot as plt
 import time
 import math
 from tqdm import tqdm
 import json
+import pprint
 
 from itertools import combinations, groupby
 
@@ -130,7 +130,7 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
             values are lists of tuples of num_of_nodes and avg time.
     """
     NODES = [5, 10, 15, 20, 30, 50, 75, 100,
-             350, 500, 1000]
+             350, 500]
     stat = {
         'Prim': [],
         'Kraskal': []
@@ -138,6 +138,7 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
 
     for num_of_nodes in NODES:
 
+        print('\n{} nodes'.format(num_of_nodes))
         # Test Prim
         time_taken = 0
         for _ in tqdm(range(num_of_iterations)):
@@ -177,7 +178,7 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
     with open('stat.json', 'w', encoding='utf-8') as file:
         json.dump(stat, file, ensure_ascii=False, indent=4)
 
-    print(stat)
+    pprint.pprint(stat)
     return stat
 
 
@@ -219,14 +220,14 @@ def prim_algorithm(graph, weight=0):
     return tree, weight
 
 
-for i in tqdm(range(1000)):
-    graph = get_info(10, 0.1)
-    tp = prim_algorithm(graph)
-    tk = kruskal_algorithm(graph)
-    if tk[1] != tp[1]:
-        print('Graph: ', graph)
-        print('Prim:', tp)
-        print('Kruskal:', tk)
-        print()
-# if __name__ == "__main__":
-#     test_algoritms()
+# for i in tqdm(range(1000)):
+#     graph = get_info(50, 0.5)
+#     tp = prim_algorithm(graph)
+#     tk = kruskal_algorithm(graph)
+#     if tk[1] != tp[1]:
+#         print('Graph: ', graph)
+#         print('Prim:', tp)
+#         print('Kruskal:', tk)
+#         print()
+if __name__ == "__main__":
+    test_algoritms()
