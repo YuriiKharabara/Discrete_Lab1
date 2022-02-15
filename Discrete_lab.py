@@ -179,16 +179,21 @@ def test_algoritms(num_of_iterations: int = 100) -> dict:
 
 
 def get_minimal_weigth(graph_edges, connected_nodes, tree):
-    used_points = set()
+    used_points=set()
     for verticles in connected_nodes:
-        edge = min(graph_edges, key=lambda x: x[2] if ((x[0] == verticles or x[1] == verticles) and (
-            x[0] not in connected_nodes or x[1] not in connected_nodes)) else math.inf)
+        edge = min (graph_edges, key=lambda x: x[2] if ((x[0]==verticles or x[1] == verticles) and (x[0] not in connected_nodes or x[1] not in connected_nodes)) else math.inf)
         used_points.add(edge)
     for i in tree:
         if i in used_points:
             used_points.remove(i)
-    edge = min(used_points, key=lambda x: x[2])
+    dont_needed=set()
+    for j in used_points:
+            if j[0] in connected_nodes and j[1] in connected_nodes:
+                dont_needed.add(j)
+    used_points=used_points-dont_needed
+    edge=min(used_points, key=lambda x: x[2])
     return edge
+
 
 
 def prim_algorithm(graph, weight=0):
@@ -207,6 +212,7 @@ def prim_algorithm(graph, weight=0):
             connected_nodes.append(edge[1])
     for i in tree:
         weight += i[2]
+    tree = sorted(tree, key = lambda x: x[2])
     return tree, weight
 
 
