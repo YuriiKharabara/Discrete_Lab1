@@ -1,3 +1,6 @@
+"""This module contains functions that implement
+Kruskal and Prim algorythms and test their performance."""
+
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
