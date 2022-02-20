@@ -1,45 +1,62 @@
 {
-    "Prim": [],
-    "Kraskal": [
+    "Prim": [
         {
             "num_of_nodes": 5,
-            "avg_time": 5.631680105580017e-06
+            "avg_time": 3.4096381132258105e-05
         },
         {
             "num_of_nodes": 10,
-            "avg_time": 1.1237589969823602e-05
-        },
-        {
-            "num_of_nodes": 15,
-            "avg_time": 1.8252689951623324e-05
+            "avg_time": 0.00024534239986678585
         },
         {
             "num_of_nodes": 20,
-            "avg_time": 3.0307409761007876e-05
-        },
-        {
-            "num_of_nodes": 30,
-            "avg_time": 6.021881996275624e-05
+            "avg_time": 0.002717934950342169
         },
         {
             "num_of_nodes": 50,
-            "avg_time": 0.00015757593995658682
-        },
-        {
-            "num_of_nodes": 75,
-            "avg_time": 0.0003717713999867556
+            "avg_time": 0.08082968006958254
         },
         {
             "num_of_nodes": 100,
-            "avg_time": 0.0007213149199014879
+            "avg_time": 0.8550576343698776
         },
         {
-            "num_of_nodes": 350,
-            "avg_time": 0.019671435430282144
+            "num_of_nodes": 200,
+            "avg_time": 13.126579095500347
         },
         {
             "num_of_nodes": 500,
-            "avg_time": 0.052065856740046004
+            "avg_time": 503.563670481841
+        }
+    ],
+    "Kraskal": [
+        {
+            "num_of_nodes": 5,
+            "avg_time": 8.627789793536066e-06
+        },
+        {
+            "num_of_nodes": 10,
+            "avg_time": 1.771923023625277e-05
+        },
+        {
+            "num_of_nodes": 20,
+            "avg_time": 4.7611039626644924e-05
+        },
+        {
+            "num_of_nodes": 50,
+            "avg_time": 0.0001696554299269337
+        },
+        {
+            "num_of_nodes": 100,
+            "avg_time": 0.0007572049395821522
+        },
+        {
+            "num_of_nodes": 200,
+            "avg_time": 0.00427670522039989
+        },
+        {
+            "num_of_nodes": 500,
+            "avg_time": 0.055903752179874575
         }
     ]
 }
