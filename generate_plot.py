@@ -35,9 +35,9 @@ def plot_kruskal(nodes: list, perf: list):
     plt.style.use('ggplot')
     plt.plot(nodes, perf, label='Kruskal', marker='.')
     plt.legend()
-    plt.title('Kruskal algorythm performance')
-    plt.xlabel('Number Of Nodes')
-    plt.ylabel('Execution Time')
+    plt.title('Kruskal Performance')
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Execution Time, s')
     plt.tight_layout()
 
     plt.show()
@@ -53,9 +53,9 @@ def plot_prim(nodes: list, perf: list):
     plt.style.use('ggplot')
     plt.plot(nodes, perf, label='Prim', marker='.')
     plt.legend()
-    plt.title('Prim algorythm performance')
-    plt.xlabel('Number Of Nodes')
-    plt.ylabel('Execution Time')
+    plt.title('Prim  Performance')
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Execution Time, s')
 
     plt.show()
 
@@ -74,9 +74,9 @@ def plot_both(nodes: list, perf: list):
     plt.plot(nodes, perf_p, label='Prim', marker='.')
     plt.plot(nodes, perf_k, label='Kruskal', marker='.')
     plt.legend()
-    plt.title('Prim and Kruskal algorythms performance')
-    plt.xlabel('Number Of Nodes')
-    plt.ylabel('Execution Time')
+    plt.title('Prim and Kruskal Performance')
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Execution Time, s')
     plt.tight_layout()
 
     plt.show()
