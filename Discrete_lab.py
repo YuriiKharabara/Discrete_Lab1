@@ -75,16 +75,11 @@ def kruskal_algorithm(graph_info: tuple) -> list:
 , 6, 22), (2, 3, 26), (2, 5, 22), (3, 4, 3), (4, 6, 19)], [1, 2, 3, 4, 5, 6]))
     [(3, 4, 3), (1, 2, 13), (1, 5, 14), (4, 6, 19), (1, 4, 17)]
     """
-    # Створюю сортований список ребер за зростянням ваг,
-    # сет неізольованих вершин і словник де ключами є кожна вершина,
-    # а значеннями лісти вершин, з якими ця вершина зєднана
     E = sorted(graph_info[0], key=lambda x: x[2])
     connected_nodes = set()
     isolated_groups = {}
     T = list()
 
-    # тут не складно, я хуй зна як описати, кожен рядок це тупо,
-    # якщо хош то напиши в тг що цікавить
     for edge in E:
         v1, v2 = edge[0], edge[1]
         if v1 not in connected_nodes or v2 not in connected_nodes:
@@ -109,8 +104,6 @@ def kruskal_algorithm(graph_info: tuple) -> list:
             gr2 = set(isolated_groups[v2])
             for node in gr2:
                 isolated_groups[node] = isolated_groups[v1]
-            # for node in set(isolated_groups[v2]):
-            #     isolated_groups[v2] += isolated_groups[v1]
 
             T.append(edge)
 
@@ -121,72 +114,13 @@ def kruskal_algorithm(graph_info: tuple) -> list:
     return T, weight
 
 
-def test_algoritms(num_of_iterations: int = 100) -> dict:
-    """Run both algorithms 1000 times for each humber of nodes,
-    return statistics of performance.
-
-    Returns:
-        dict: Statistics of performance. Keys are algorithms,
-            values are lists of tuples of num_of_nodes and avg time.
-    """
-    NODES = [5, 10, 15, 20, 30, 50, 75, 100,
-             350, 500]
-    stat = {
-        'Prim': [],
-        'Kraskal': []
-    }
-
-    for num_of_nodes in NODES:
-
-        print('\n{} nodes'.format(num_of_nodes))
-        # Test Prim
-        time_taken = 0
-        for _ in tqdm(range(num_of_iterations)):
-            graph_info = get_info(num_of_nodes, completeness=0.3)
-            start = time.perf_counter()
-            prim_algorithm(graph_info)
-            end = time.perf_counter()
-
-            time_taken += end - start
-
-        avg_time = time_taken/num_of_iterations
-        stat['Prim'].append(
-            {
-                'num_of_nodes': num_of_nodes,
-                'avg_time': avg_time
-            }
-        )
-
-        # Test Kraskal
-        time_taken = 0
-        for _ in tqdm(range(num_of_iterations)):
-            graph_info = get_info(num_of_nodes, completeness=0.3)
-            start = time.perf_counter()
-            kruskal_algorithm(graph_info)
-            end = time.perf_counter()
-
-            time_taken += end - start
-
-        avg_time = time_taken/num_of_iterations
-        stat['Kraskal'].append(
-            {
-                'num_of_nodes': num_of_nodes,
-                'avg_time': avg_time
-            }
-        )
-
-    with open('stat.json', 'w', encoding='utf-8') as file:
-        json.dump(stat, file, ensure_ascii=False, indent=4)
-
-    pprint.pprint(stat)
-    return stat
-
-
 def get_minimal_weigth(graph_edges, connected_nodes, tree):
     used_points = set()
     for verticles in connected_nodes:
-        edge = min(graph_edges, key=lambda x: x[2] if ((x[0] == verticles or x[1] == verticles) and (
-            x[0] not in connected_nodes or x[1] not in connected_nodes)) else math.inf)
+        edge = min(graph_edges, key=lambda x: x[2] if
+                   ((x[0] == verticles or x[1] == verticles) and
+                   (x[0] not in connected_nodes or
+                    x[1] not in connected_nodes)) else math.inf)
         used_points.add(edge)
     for i in tree:
         if i in used_points:
@@ -220,14 +154,77 @@ def prim_algorithm(graph, weight=0):
     return tree, weight
 
 
-# for i in tqdm(range(1000)):
-#     graph = get_info(50, 0.5)
-#     tp = prim_algorithm(graph)
-#     tk = kruskal_algorithm(graph)
-#     if tk[1] != tp[1]:
-#         print('Graph: ', graph)
-#         print('Prim:', tp)
-#         print('Kruskal:', tk)
-#         print()
+def test_algoritms(num_of_iterations: int = 100) -> dict:
+    """Run both algorithms 1000 times for each humber of nodes,
+    return statistics of performance.
+
+    Returns:
+        dict: Statistics of performance. Keys are algorithms,
+            values are lists of tuples of num_of_nodes and avg time.
+    """
+    NODES = [5, 10, 20, 50, 100, 200, 500]
+    stat = {
+        'Prim': [],
+        'Kraskal': []
+    }
+
+    for num_of_nodes in NODES:
+        print('\n{} nodes'.format(num_of_nodes))
+
+        # Test Prim
+        time_taken = 0
+        for _ in tqdm(range(num_of_iterations)):
+            graph_info = get_info(num_of_nodes, completeness=0.25)
+            start = time.perf_counter()
+            prim_algorithm(graph_info)
+            end = time.perf_counter()
+
+            time_taken += end - start
+
+        avg_time = time_taken/num_of_iterations
+        stat['Prim'].append(
+            {
+                'num_of_nodes': num_of_nodes,
+                'avg_time': avg_time
+            }
+        )
+
+        # Test Kruskal
+        time_taken = 0
+        for _ in tqdm(range(num_of_iterations)):
+            graph_info = get_info(num_of_nodes, completeness=0.3)
+            start = time.perf_counter()
+            kruskal_algorithm(graph_info)
+            end = time.perf_counter()
+
+            time_taken += end - start
+
+        avg_time = time_taken/num_of_iterations
+        stat['Kraskal'].append(
+            {
+                'num_of_nodes': num_of_nodes,
+                'avg_time': avg_time
+            }
+        )
+
+    with open('stat.json', 'w', encoding='utf-8') as file:
+        json.dump(stat, file, ensure_ascii=False, indent=4)
+
+    pprint.pprint(stat)
+    return stat
+
+
+def compare_weights():
+    for _ in tqdm(range(1000)):
+        graph = get_info(50, 0.5)
+        tp = prim_algorithm(graph)
+        tk = kruskal_algorithm(graph)
+        if tk[1] != tp[1]:
+            print('Graph: ', graph)
+            print('Prim:', tp)
+            print('Kruskal:', tk)
+            print()
+
+
 if __name__ == "__main__":
     test_algoritms()
