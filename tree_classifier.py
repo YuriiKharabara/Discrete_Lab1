@@ -172,6 +172,8 @@ def find_mean_accuracy(num_of_iter: int = 100, base: str = 'wine') -> float:
     elif base == 'iris':
         base = datasets.load_iris()
 
+    my_dtc = MyDecisionTreeClassifier(4)
+
     total = 0
     for _ in tqdm(range(num_of_iter)):
         X, y = base.data, base.target
