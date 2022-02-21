@@ -62,9 +62,6 @@ def get_info(num_of_nodes: int, completeness: float = 1) -> tuple:
     return edges, nodes
 
 
-get_info(2)
-
-
 def kruskal_algorithm(graph_info: tuple) -> list:
     """Return minimum spanning tree using kruskal algorithm.
 
@@ -76,7 +73,7 @@ def kruskal_algorithm(graph_info: tuple) -> list:
 
     >>> kruskal_algorithm(([(1, 2, 13), (1, 3, 18), (1, 4, 17), (1, 5, 14), (1\
 , 6, 22), (2, 3, 26), (2, 5, 22), (3, 4, 3), (4, 6, 19)], [1, 2, 3, 4, 5, 6]))
-    [(3, 4, 3), (1, 2, 13), (1, 5, 14), (4, 6, 19), (1, 4, 17)]
+    ([(3, 4, 3), (1, 2, 13), (1, 5, 14), (4, 6, 19), (1, 4, 17)], 66)
     """
     E = sorted(graph_info[0], key=lambda x: x[2])
     connected_nodes = set()
@@ -118,6 +115,18 @@ def kruskal_algorithm(graph_info: tuple) -> list:
 
 
 def get_minimal_weigth(graph_edges, connected_nodes, tree):
+    """Goes through graph edges and returns one with the smallest weight which suit our conditions
+
+    Args:
+        graph_edges (List): List of edges
+        connected_nodes (list): Nodes which are already used
+        tree (list): List of edges of our tree
+
+    Returns:
+        tuple: edge with smallest weight and which suit requirements
+    >>> get_minimal_weigth([(1,2,3), (5,4,0), (3,2,2), (3,4, 5), (5,6,0)], [0,1,2], [(1,2,3)])
+    (3, 2, 2)
+    """
     used_points = set()
     for verticles in connected_nodes:
         edge = min(graph_edges, key=lambda x: x[2] if
@@ -138,6 +147,21 @@ def get_minimal_weigth(graph_edges, connected_nodes, tree):
 
 
 def prim_algorithm(graph, weight=0):
+    """Prim's algorithm
+
+    Args:
+        graph (tuple): (list of edges, list of nodes)
+        weight (int, optional): weight of the graph, if you already have some weight you can \
+                                add it. Defaults to 0.
+
+    Returns:
+        tuple: (Tree=list of edges, weight)
+    >>> prim_algorithm(([(0, 1, 1), (0, 4, 1), (1, 4, 1), (2, 4, 8), (3, 4, 4)], [0, 1, 2, 3, 4]))
+    ([(0, 1, 1), (1, 4, 1), (3, 4, 4), (2, 4, 8)], 14)
+    >>> prim_algorithm(([(1, 2, 13), (1, 3, 18), (1, 4, 17), (1, 5, 14), (1\
+, 6, 22), (2, 3, 26), (2, 5, 22), (3, 4, 3), (4, 6, 19)], [1, 2, 3, 4, 5, 6]))
+    ([(3, 4, 3), (1, 2, 13), (1, 5, 14), (1, 4, 17)], 47)
+    """
     length = len(graph[1])
     connected_nodes = [0]
     tree = []
@@ -230,4 +254,6 @@ def compare_weights():
 
 
 if __name__ == "__main__":
-    test_algoritms()
+    # test_algoritms()
+    import doctest
+    doctest.testmod()
