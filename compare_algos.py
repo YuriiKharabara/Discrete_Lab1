@@ -254,6 +254,4 @@ def compare_weights():
 
 
 if __name__ == "__main__":
-    # test_algoritms()
-    import doctest
-    doctest.testmod()
+    test_algoritms()
