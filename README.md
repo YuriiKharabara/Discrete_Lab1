@@ -1,7 +1,7 @@
 # Compare algorithms and Decision Tree classiffier
 In this repo you can find 2 projects:
-1. compare_algos - is a program to compare Kruskal and Prims algorithms.
-2. tree_classifier - is a program to build decision tree and predict some result.
+1. [compare_algos](compare_algos.py) - is a program to compare Kruskal and Prims algorithms.
+2. [tree_classifier](tree_classifier.py) - is a program to build decision tree and predict some result.
 
 ### Istall the requirements. 
 Don't forget to install all of the modules you need.
@@ -20,7 +20,7 @@ prim_algorithm(get_info(500, 1))
 And you will see how long it works.
 
 Nevertheless, you can check it on small graphs (less or equal then 200 points)
-~~~bash
+~~~python
 prim_algorithm(get_info(20, 1))
 ~~~
 As a result you will see something like that:
@@ -51,7 +51,7 @@ At the termination of the algorithm, the forest forms a minimum spanning forest 
 ### Comparing both algorithm:
 You can use function "test_algoritms", which run both algorithms 1000 times for each number of nodes, which return statistics of performance.
 To use this function:
-~~~bash
+~~~python
 test_algorithms()
 ~~~
 
@@ -79,11 +79,11 @@ It is based on Decision Tree.
 It takes train data to train itself and completely different test data to test its performance.
 
 To check this program you should just run the module. There is also a function to find average accuracy. To use it, you should uncomment and run this row:
-~~~bash
+~~~python
 print(find_mean_accuracy())
 ~~~
 As a result you will get this:
-~~~bash
+~~~python
 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 100/100 [00:25<00:00,  3.88it/s]
 0.8922222222222221
 ~~~
